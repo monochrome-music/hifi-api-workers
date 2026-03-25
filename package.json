@@ -1,0 +1,25 @@
+{
+  "name": "hifi-api-workers",
+  "version": "1.0.0",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ap5z/hifi-api-workers.git"
+  },
+  "homepage": "https://github.com/ap5z/hifi-api-workers#readme",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typegen": "wrangler types",
+    "check": "tsc --noEmit",
+    "oauth:tidal": "bun scripts/auth.ts"
+  },
+  "dependencies": {
+    "hono": "^4.9.8"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "wrangler": "^4.77.0"
+  }
+}
