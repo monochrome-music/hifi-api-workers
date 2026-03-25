@@ -2,3 +2,7 @@ name = "hifi-api-workers"
 main = "src/index.ts"
 compatibility_date = "2026-03-25"
 minify = true
+
+# can be removed if you do not have a paid workers plan
+[placement]
+mode = "smart"
