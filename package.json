@@ -4,9 +4,9 @@
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ap5z/hifi-api-workers.git"
+    "url": "git+https://github.com/monochrome-music/hifi-api-workers.git"
   },
-  "homepage": "https://github.com/ap5z/hifi-api-workers#readme",
+  "homepage": "https://github.com/monochrome-music/hifi-api-workers#readme",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
