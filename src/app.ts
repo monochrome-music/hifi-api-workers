@@ -11,7 +11,20 @@ import videoRoutes from './routes/videos'
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false })
 
-app.use('*', cors())
+app.use(
+  '*',
+  cors({
+    origin: (origin) => {
+      try {
+        const url = new URL(origin)
+        if (url.hostname.endsWith('.squid.wtf')) {
+          return 'null'
+        }
+      } catch {}
+      return origin
+    },
+  })
+)
 
 app.route('', rootRoutes)
 app.route('', trackRoutes)
