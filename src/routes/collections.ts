@@ -9,7 +9,7 @@ import {
   getRequiredString,
   getString,
 } from "../lib/query";
-import { getAccessToken, tidalJsonRequest } from "../lib/tidal/client";
+import { tidalJsonRequest } from "../lib/tidal/client";
 import { buildImageUrl } from "../lib/tidal/helpers";
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
@@ -24,9 +24,14 @@ app.get("/album", async (c) => {
   });
   const offset = getInt(searchParams, "offset", { defaultValue: 0, min: 0 });
   const countryCode = getCountryCode(c.env);
-  const token = await getAccessToken(c.env);
 
-  const tasks: Array<Promise<{ data: any; token: string }>> = [];
+  const initial = await tidalJsonRequest({
+    env: c.env,
+    url: `https://api.tidal.com/v1/albums/${id}`,
+    params: { countryCode },
+  });
+
+  const tasks: Array<Promise<{ data: any; token: string; cred: any }>> = [];
   let currentOffset = offset;
   let remainingLimit = limit;
 
@@ -37,22 +42,14 @@ app.get("/album", async (c) => {
         env: c.env,
         url: `https://api.tidal.com/v1/albums/${id}/items`,
         params: { countryCode, limit: chunkSize, offset: currentOffset },
-        token,
+        cred: initial.cred,
       }),
     );
     currentOffset += chunkSize;
     remainingLimit -= chunkSize;
   }
 
-  const [initial, itemPages] = await Promise.all([
-    tidalJsonRequest({
-      env: c.env,
-      url: `https://api.tidal.com/v1/albums/${id}`,
-      params: { countryCode },
-      token,
-    }),
-    Promise.all(tasks),
-  ]);
+  const itemPages = await Promise.all(tasks);
   const items: any[] = [];
 
   for (const page of itemPages) {

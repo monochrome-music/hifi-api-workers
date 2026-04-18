@@ -371,10 +371,32 @@ async function main(): Promise<void> {
     throw new Error('No refresh_token returned by TIDAL')
   }
 
+  const userId = tokens.user_id ?? tokens.userId ?? ''
+
+  const existingValues = parseDotEnv(raw)
+  const existingTokenJson = existingValues.TOKEN_JSON
+  let tokenJsonEntries: Array<Record<string, string>> = []
+
+  if (existingTokenJson) {
+    try {
+      const parsed = JSON.parse(existingTokenJson)
+      tokenJsonEntries = Array.isArray(parsed) ? parsed : [parsed]
+    } catch {}
+  }
+
+  tokenJsonEntries = tokenJsonEntries.filter(
+    (entry) => entry.refresh_token !== tokens.refresh_token,
+  )
+
+  tokenJsonEntries.push({
+    client_ID: selectedCredential.clientId,
+    client_secret: selectedCredential.clientSecret,
+    refresh_token: tokens.refresh_token,
+    ...(userId ? { userID: userId } : {}),
+  })
+
   await writeEnvValues(raw, {
-    CLIENT_ID: selectedCredential.clientId,
-    CLIENT_SECRET: selectedCredential.clientSecret,
-    REFRESH_TOKEN: tokens.refresh_token,
+    TOKEN_JSON: JSON.stringify(tokenJsonEntries),
   })
   console.log(tokens.refresh_token)
 }

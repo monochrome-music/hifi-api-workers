@@ -9,6 +9,8 @@ declare namespace Cloudflare {
 		CLIENT_ID: string;
 		CLIENT_SECRET: string;
 		REFRESH_TOKEN: string;
+		USER_ID?: string;
+		TOKEN_JSON?: string;
 	}
 }
 interface Env extends Cloudflare.Env {}

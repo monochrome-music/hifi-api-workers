@@ -160,7 +160,7 @@ app.get('/artist', async (c) => {
   const artistId = f as number
   const albumsUrl = `https://api.tidal.com/v1/artists/${artistId}/albums`
 
-  const requests: Array<Promise<{ data: any; token: string }>> = [
+  const requests: Array<Promise<{ data: any; token: string; cred: any }>> = [
     tidalJsonRequest({
       env: c.env,
       url: albumsUrl,
